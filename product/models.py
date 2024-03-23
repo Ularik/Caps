@@ -130,11 +130,11 @@ class Favorite(models.Model):
         User,
         on_delete=models.PROTECT
     )
-    product = models.ForeignKey(Storage, on_delete=models.PROTECT)
+    storage = models.ForeignKey(Storage, on_delete=models.PROTECT)
     created_date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.user} --> {self.product}"
+        return f"{self.user} --> {self.storage}"
 
 
 class Poster(models.Model):

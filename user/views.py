@@ -1,6 +1,7 @@
+
 from rest_framework.views import APIView, Response, status
 from .models import MyUser
-from .serializers import UserCreateSerializer, UserProfileSerializer, UserUpdateSerializer
+from .serializers import UserCreateSerializer, UserProfileSerializer
 
 
 class UserCreateView(APIView):
@@ -32,8 +33,6 @@ class UserProfileView(APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
 
 
 

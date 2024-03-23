@@ -19,8 +19,3 @@ urlpatterns = [
 
 ]
 
-# {
-# "phone_number": "+996501519040",
-# "username": "Lolsdc",
-# "password": "admin"
-# }
