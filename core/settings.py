@@ -26,8 +26,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'rest_framework',
     'drf_yasg',
+    'rest_framework',
     'django_filters',
     'user',
     'product',
@@ -70,8 +70,12 @@ WSGI_APPLICATION = 'core.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'capshop05',  # Имя вашей базы данных
+        'USER': 'ular',      # Имя вашего пользователя
+        'PASSWORD': 'admin',  # Ваш пароль
+        'HOST': 'localhost',   # Хост, на котором работает PostgreSQL
+        'PORT': '5432',            # Порт (по умолчанию 5432)
     }
 }
 
@@ -98,7 +102,7 @@ AUTH_USER_MODEL = 'user.MyUser'
 
 # Настройка срока действия Access Token и Refresh Token
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),  # Продолжительность жизни Access Token
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=120),  # Продолжительность жизни Access Token
     'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),  # Продолжительность жизни Refresh Token при его использовании
     'SLIDING_TOKEN_LIFETIME': timedelta(days=7),  # Продолжительность жизни Refresh Token
     'SLIDING_TOKEN_REFRESH_REUSE_ALLOWS_REFRESH': False,  # Разрешить повторное использование Refresh Token для обновления
@@ -117,6 +121,8 @@ REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': (
         'django_filters.rest_framework.DjangoFilterBackend',
     ),
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    'PAGE_SIZE': 2
 }
 
 

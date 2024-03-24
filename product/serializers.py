@@ -45,7 +45,7 @@ class FavoriteCreateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Favorite
-        fields = ('user', 'product')
+        fields = ('user', 'storage')
 
     def create(self, validated_data):
         favorite = Favorite(**validated_data)

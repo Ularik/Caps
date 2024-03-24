@@ -85,8 +85,7 @@ class Product(models.Model):
         default=0.00
     )
     discount = models.PositiveIntegerField(
-        blank=True,
-        null=True
+        default=0.00
     )
     created_date = models.DateTimeField(
         auto_now_add=True

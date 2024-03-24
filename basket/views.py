@@ -20,6 +20,13 @@ class BasketDetailView(generics.RetrieveAPIView):
     serializer_class = BasketDetailSerializer
 
 
+class BasketDeleteView(generics.DestroyAPIView):
+    queryset = Basket.objects.all()
+    serializer_class = BasketDetailSerializer
+
+
+
+
 
 
 

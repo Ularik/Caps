@@ -12,6 +12,7 @@ class BasketListSerializer(serializers.ModelSerializer):
 
 class BasketDetailSerializer(serializers.ModelSerializer):
     storage = StorageListSerializer()
+
     class Meta:
         model = Basket
         fields = ('id', 'storage', 'quantity', 'delivery_sum')

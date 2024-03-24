@@ -1,11 +1,9 @@
 from django.db.models import F
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import Response, APIView, status
 from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework.generics import (
     ListAPIView,
-    RetrieveAPIView,
     CreateAPIView,
     UpdateAPIView,
     DestroyAPIView,
@@ -30,13 +28,14 @@ from collections import deque
 from decimal import Decimal
 
 
+
 class IndexListView(APIView):
 
     def get(self, request):
         # requests
         posters = Poster.objects.all()
         brands = Brand.objects.all()
-        bestsellers = ProductBestsellersListView.bestseller()
+        bestsellers = bestseller()
         sales = Storage.objects.filter(product__discount__gt=F('product__price'))
 
         # serializers
@@ -60,28 +59,25 @@ class ProductDiscountView(ListAPIView):
     serializer_class = StorageListSerializer
 
 
-class ProductBestsellersListView(APIView):
-    @staticmethod
-    def bestseller():
+def bestseller():
 
-        baskets = Basket.objects.all()
-        bestsellers = deque([], maxlen=10)
-        dct = {}
-        for basket in baskets:
-            dct[basket.storage] = dct.get('baskets.storage', 0) + 1
+    baskets = Basket.objects.all()
+    bestsellers = deque([], maxlen=10)
+    dct = {}
+    for basket in baskets:
+           dct[basket.storage] = dct.get('baskets.storage', 0) + 1
 
-        arr = sorted(dct, key=lambda x: dct[x])
-        for storage in arr:
-            bestsellers.append(storage)
+    arr = sorted(dct, key=lambda x: dct[x])
+    for storage in arr:
+           bestsellers.append(storage)
 
-        return bestsellers
+    return bestsellers
 
-    def get(self, request):
 
-        bestsellers = self.bestseller()
-        products_serializer = StorageListSerializer(bestsellers, many=True)
+class ProductBestsellersListView(ListAPIView):
 
-        return Response(products_serializer.data, status.HTTP_200_OK)
+    queryset = list(bestseller())
+    serializer_class = StorageListSerializer
 
 
 class StorageListView(ListCreateAPIView):
@@ -96,11 +92,6 @@ class StorageListView(ListCreateAPIView):
             return StorageListSerializer
         elif self.request.method == 'POST':
             return FavoriteCreateSerializer
-
-
-class StorageDetailView(RetrieveAPIView):
-    queryset = Storage.objects.all()
-    serializer_class = StorageListSerializer
 
 
 class StorageCreateView(CreateAPIView):
@@ -123,9 +114,17 @@ class ProductDetailView(APIView):
     def get(self, request, pk):
 
         product = Product.objects.get(pk=pk)
-        serializer = ProductDetailSerializer(product, context={'request': request})
+        product_serializer = ProductDetailSerializer(product, context={'request': request})
 
-        return Response(serializer.data, status.HTTP_200_OK)
+        same_products = Storage.objects.filter(product__category=product.category)
+        same_products_serializer = StorageListSerializer(same_products, many=True, context={'request': request})
+
+        data = {
+            'product': product_serializer.data,
+            'same_products': same_products_serializer.data
+        }
+
+        return Response(data, status.HTTP_200_OK)
 
 
 class ProductForBasketView(APIView):
