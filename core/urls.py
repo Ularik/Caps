@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.http import HttpResponseNotFound
 from django.urls import path, include
 from rest_framework import permissions
 from drf_yasg.views import get_schema_view
@@ -25,3 +26,16 @@ urlpatterns = [
     path('product/', include('product.urls')),
     path('basket/', include('basket.urls'))
 ]
+
+def page_not_found(request, exception):
+    text = ("<h1>Page not found<br>"
+            "please include in this urls:<br>"
+            "swagger/<br>"
+            "admin/<br>"
+            "user/<br>"
+            "product/<br>"
+            "basket/</h1>")
+
+    return HttpResponseNotFound(text)
+
+handler404 = page_not_found

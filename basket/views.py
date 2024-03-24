@@ -1,4 +1,5 @@
-from rest_framework.views import APIView, Response, status
+
+from rest_framework.views import Response
 from rest_framework import generics
 from .models import Basket
 from basket.serializers import BasketListSerializer, BasketDetailSerializer
@@ -23,6 +24,9 @@ class BasketDetailView(generics.RetrieveAPIView):
 class BasketDeleteView(generics.DestroyAPIView):
     queryset = Basket.objects.all()
     serializer_class = BasketDetailSerializer
+
+
+
 
 
 
